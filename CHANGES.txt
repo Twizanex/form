@@ -1,0 +1,170 @@
+Changes for release 0.87
+
+Changed the flexreg confirmation link over-ride so that it works with Elgg 1.7.
+
+Removed one last bit of experimental code accidentally left in for 0.86.
+
+Fixed a bug that prevented completely deleting the content of a profile field
+when a user edited a profile.
+
+Form delete action now forwards to the correct page.
+
+Deleting forms now also deletes any related search definitions.
+
+Supported added for file attachments if the "attach" plugin is available.
+
+Added access control to search forms.
+
+There is an optional search box for content forms (only works for new content).
+
+Added {$_guid} field to templates to provide form data guid
+
+Added the ability to mail to user search results (needs the "message_queue" plugin).
+
+Added an over-ride to the RSS group profileitems view to fix a bug in Elgg 1.7.
+
+Over-rode some profile link views to prevent showing profile edit
+links to logged-out users. (Seems to be a server-dependent core Elgg bug?)
+
+Stopped adding a username field in the standard registration display if autousername
+is turned on.
+
+Added an option to turn off access boxes for user profile forms.
+
+Added 'group_profile_category_'.str_replace(" ","_",$vars['entity']->group_profile_category
+class to group icons div if group_profile_category is defined for that group. 
+Eg. group_profile_category_mycategory
+This makes it possible to set the icon through CSS depending upon the category.
+
+Added 'user_profile_category_'.str_replace(" ","_",$vars['entity']->user_profile_category
+class to user icons divs if user_profile_category is defined for that user. 
+Eg. user_profile_category_mycategory
+This makes it possible to set the icon through CSS depending upon the category.
+
+In addition, added the icon size as a class for both group and user icon div wrappers.
+
+Changes for release 0.86
+
+Removed experimental code that was preventing form submits for some users.
+
+Removed bad <? tag in "form/nav" view.
+
+Added a 'groupprofile_preupdate' event so that plugins can look at the 
+current and new group profile fields and refuse the update or carry out 
+some other action.
+
+Added a group description plugin hook so that plugins can append text below
+the group description field.
+
+Hid access controls for invisible fields.
+
+Changes for release 0.85
+
+Introduced flexreg plugin for registration forms
+
+Added ability to assign a validation function for field definitions
+
+Introduced templates for form display (currently only for registration forms,
+but could be expanded)
+
+Added a plugin setting for user content on the Elgg search page and turned it off by default.
+
+Introduced group_configure plugin for more complex group category
+configuration
+
+Introduced group_messaging plugin
+
+Checkbox searches should now work as expected.
+
+Fixed a bug in the edit group form which displayed the wrong message
+if the group already existed.
+
+Stopped displaying profile data in the extended view if it is set 
+to invisible (regardless of access level), unless the viewer is an admin.
+
+Fixed a bug which occasionally unset admin-only fields.
+
+The pages that list all fields no longer care about the user who created them.
+
+Replaced input/longtext with form/input/longtext in several places
+to avoid TinyMCE problems.
+
+Turned off input filtering for the form, display and listing templates
+so that they can contain arbitrary content.
+
+Made flexgroupprofile work even if no group profile form is defined.
+
+Added the ability to make group icons and descriptions mandatory
+
+Now properly copies over an existing group icon if transferring the
+group to a new owner.
+
+Fixed a broken link on the orphan fields page.
+
+Added a 'profilepreupdate' event so that plugins can look at the current and new profile
+fields and refuse the update or carry out some other action.
+
+Fixed the video box and image upload thumbnail display.
+
+Added the ability to display three thumbnail sizes for image
+uploads:
+
+{$my_field_name:thumb:tiny} (60x60)
+{$my_field_name:thumb:small} (153x153)
+{$my_field_name:thumb:large} (600x600)
+
+Added clarification to README.txt that image upload works only with 
+the file plugin activated.
+
+Changes for release 0.8.4
+
+Fixed several display problems with flexfile.
+
+Creating new groups should work properly with flexgroupprofile.
+
+Added new private groups option (introduced in Elgg 1.6) to flexgroup profile.
+This has not been tested so I would appreciate feedback on that.
+
+Changes for release 0.8.3
+
+Fixed some weirdness in the display of the orientation option 
+for when editing radio button and checkbox group definitions.
+This should now display consistently.
+
+Removed the is_keyword option as it did not do anything (in Elgg 1.x
+metadata is always searchable if you have the right access level).
+
+Fixed the display of checkbox groups (previously these would only
+display properly if only one had been selected).
+
+Added a $_friendlytime template variable.
+
+Fixed several problems with the group profile display and added a
+"wide tabbed" display for groups that need more room for their profile
+information.
+
+Changes for release 0.8.2
+
+Required fields for content forms are now working again.
+
+Added some protection against the metadata case bug:
+http://trac.elgg.org/elgg/ticket/639
+
+I may have accidentally left a debugging statement in 
+extended profile views in the last release  (not sure, but 
+this release definitely does not have it.)
+
+Changes for release 0.8.1
+
+Default field access levels should now work properly.
+
+Moving fields repeatedly up and down now works.
+
+Skype, MSN and ICQ contact fields now display a text box (and render just as
+text as well - some decoration will be added in a future release).
+ 
+Flexgroupprofiles now always have a description field and use the one the
+group already has if available.
+ 
+Custom templates should now show all the values in tag and checkbox fields 
+(previously they showed only one).
