@@ -17,7 +17,7 @@ require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 require_once(dirname(__FILE__)."/models/model.php");
     
 // Define context
-set_context('form:admin');
+elgg_set_context('form:admin');
 
 admin_gatekeeper();
 
@@ -47,6 +47,6 @@ if ($form_id) {
 
 $body = elgg_view('form/forms/manage_form',$vars);
 
-page_draw($title,elgg_view_layout("two_column_left_sidebar", '', elgg_view_title($title) . $body));
+elgg_view_page($title,elgg_view_layout("two_column_left_sidebar", '', elgg_view_title($title) . $body));
 
 ?>
