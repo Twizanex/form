@@ -11,7 +11,7 @@
  */
 
 	$owner = $vars['entity']->getOwnerEntity();
-	$friendlytime = friendly_time($vars['entity']->time_created);
+	$friendlytime = elgg_view_friendly_time($vars['entity']->time_created);
 	$icon = elgg_view(
 			"profile/icon", array(
 									'entity' => $owner,
@@ -20,6 +20,6 @@
 		);
 	$info = '<p><a href="'.$vars['entity']->getURL().'">'.elgg_echo('form:submission_to').'</a> "'.get_entity($vars['entity']->form_id)->title.'"</p>';
 	$info .= "<p class=\"owner_timestamp\"><a href=\"{$owner->getURL()}\">{$owner->name}</a> {$friendlytime}</p>";
-	echo elgg_view_listing($icon,$info.$vars['annotations']);
+	echo elgg_view_image_block($icon,$info.$vars['annotations']);
 
 ?>
