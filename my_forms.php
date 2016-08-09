@@ -14,7 +14,7 @@
 require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
     
 // Define context
-set_context('form:content');
+elgg_set_context('form:content');
 
 global $CONFIG;
 
@@ -44,7 +44,7 @@ if ($callback) {
 		$listing_description .= '</div>';
 		$body = $listing_description.$body;
 	}
-	page_draw($title,elgg_view_layout("two_column_left_sidebar", '<br />'.elgg_view("form/search_box",array('form_id'=>$form_id)), elgg_view_title($title) . $body));
+	elgg_view_page($title,elgg_view_layout("two_column_left_sidebar", '<br />'.elgg_view("form/search_box",array('form_id'=>$form_id)), elgg_view_title($title) . $body));
 }
 
 ?>
