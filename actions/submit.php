@@ -16,7 +16,7 @@ require_once(dirname(dirname(__FILE__)) . "/models/model.php");
 global $CONFIG;
 
 // Define context
-set_context('form:content');
+elgg_set_context('form:content');
 
 $form_data_id = get_input('form_data_id',0);
 $form_id = get_input('form_id',0);
@@ -58,6 +58,6 @@ if ($preview) {
     }
 }  
 
-page_draw($title,elgg_view_layout("two_column_left_sidebar", '', elgg_view_title($title) . $body));
+elgg_view_page($title,elgg_view_layout("two_column_left_sidebar", '', elgg_view_title($title) . $body));
 
 ?>
