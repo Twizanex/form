@@ -80,7 +80,7 @@ if ($field) {
     
     // must do this because Elgg has trouble with metadata set to "0"
     // in Elgg 1.5
-    $m = get_metadata_byname($field->getGUID(),'default_access');
+    $m = elgg_get_metadata($field->getGUID(),'default_access');
     if ($m) {
     	$default_access = $m->value;
 	    if ($default_access !== '') {
