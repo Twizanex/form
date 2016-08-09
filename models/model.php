@@ -127,7 +127,7 @@ function form_handle_file_upload($fieldname,$access_id,$container_guid=0) {
 	if ($container_guid)
 		$file->container_guid = $container_guid;
 	
-	$file->simpletype = get_general_file_type($_FILES[$fieldname]['type']);
+	$file->simpletype = elgg_get_file_simple_type($_FILES[$fieldname]['type']);
 	
 	$result = $file->save();
 	
@@ -395,7 +395,7 @@ function form_get_maps($form_id) {
 }
 
 function form_get_map($form_id, $field_id) {
-    $maps = get_entities_from_metadata_multi(array('form_id'=>$form_id,'field_id'=>$field_id),'object','form:field_map',0,500);
+    $maps = elgg_get_entities_from_metadata(array('form_id'=>$form_id,'field_id'=>$field_id),'object','form:field_map',0,500);
     if ($maps) {
         return $maps[0];
     } else {
@@ -538,7 +538,7 @@ function form_set_menu_items() {
 	$entities = elgg_get_entities_from_metadata('enable_display_menu',1,'object','form:form');
 	if ($entities) {
 		foreach($entities as $form) {
-			add_menu(form_form_t($form,'display_menu_title'),$CONFIG->wwwroot.'mod/form/my_forms.php?form_view=all&id='.$form->getGUID());
+			elgg_register_menu_item(form_form_t($form,'display_menu_title'),$CONFIG->wwwroot.'mod/form/my_forms.php?form_view=all&id='.$form->getGUID());
 		}
 	}
 	
@@ -546,7 +546,7 @@ function form_set_menu_items() {
 	$entities = elgg_get_entities_from_metadata('enable_create_menu',1,'object','form:form');
 	if ($entities) {
 		foreach($entities as $form) {
-			add_menu(form_form_t($form,'create_menu_title'),$CONFIG->wwwroot.'mod/form/form.php?id='.$form->getGUID());
+			elgg_register_menu_item(form_form_t($form,'create_menu_title'),$CONFIG->wwwroot.'mod/form/form.php?id='.$form->getGUID());
 		}
 	}
 	
@@ -556,7 +556,7 @@ function form_set_menu_items() {
 		foreach($entities as $sd) {
 			$form = get_entity($sd->form_id);
 			if ($form) {
-				add_menu(form_search_definition_t($form,$sd,'menu'),$CONFIG->wwwroot.'mod/form/search.php?sid='.$sd->getGUID());
+				elgg_register_menu_item(form_search_definition_t($form,$sd,'menu'),$CONFIG->wwwroot.'mod/form/search.php?sid='.$sd->getGUID());
 			}
 		}
 	}
@@ -625,7 +625,7 @@ function form_get_data_from_form_submit($form_id=0) {
 
 function form_get_data($form_data_id) {
     $data = array();
-    $md = get_metadata_for_entity($form_data_id);
+    $md = elgg_get_metadata($form_data_id);
     if ($md) {
         foreach ($md as $item) {
         	if (isset($data[$item->name])) {
@@ -679,7 +679,7 @@ function form_delete_data($form_data_id) {
 function form_get_default_access($field) {
 	// must do this because Elgg has trouble with metadata set to "0"
  	// in Elgg 1.5 using a simple reference
-	$m = get_metadata_byname($field->getGUID(),'default_access');
+	$m = elgg_get_metadata($field->getGUID(),'default_access');
 	if ($m && ($m->value || ($m->value === 0) || ($m->value === '0'))) {
 		$access_id = $m->value;
 	} else {
@@ -698,7 +698,7 @@ function form_get_input_display_item($form,$field,$data=null,$prepopulate=true,$
     	&& get_input('hide_gpc') 
     	&& ($group_profile_category = get_input('group_profile_category'))) {
     		$html = elgg_view('input/hidden',array('internalname'=>'form_data_'.$internalname,'value'=>$group_profile_category));
-    } else if ($get_admin || !isset($field->admin_only) || !$field->admin_only || isadminloggedin()) {
+    } else if ($get_admin || !isset($field->admin_only) || !$field->admin_only || elgg_is_admin_logged_in()) {
         if (!isset($data)) {
             $data = array();
         }
@@ -839,7 +839,7 @@ function form_display_by_tab($form,$data=null,$prepopulate=true,$hidden=null,$ge
     if ($maps) {
         foreach($maps as $map) {
             $field = get_entity($map->field_id);
-            if ($get_admin || (!$field->admin_only || isadminloggedin()) ) {
+            if ($get_admin || (!$field->admin_only || elgg_is_admin_logged_in()) ) {
             	// normally don't display admin fields to non-admins
 	            if (isset($hidden) && isset($hidden[$name]) && $hidden[$name]) {
 	            	// hardcode this as a hidden field
@@ -899,7 +899,7 @@ function form_get_data_for_templated_edit_form($form,$data,$get_admin = false) {
     if ($maps) {
         foreach($maps as $map) {
             $field = get_entity($map->field_id);
-            if ($get_admin || (!$field->admin_only || isadminloggedin()) ) {
+            if ($get_admin || (!$field->admin_only || elgg_is_admin_logged_in()) ) {
             	// normally don't display admin fields to non-admins
 	            if (isset($hidden) && isset($hidden[$name]) && $hidden[$name]) {
 	            	// hardcode this as a hidden field
@@ -1073,7 +1073,7 @@ function form_view_entities($entities, $form, $viewtype) {
 		foreach($entities as $entity) {
 			$form_data_id = $entity->getGUID();
 			$entity_url = $entity->getURL();
-			$md_get = get_metadata_for_entity($form_data_id);
+			$md_get = elgg_get_metadata($form_data_id);
 			$md = array();
 			foreach ($md_get as $m) {
 				if (isset($md[$m->name])) {
@@ -1147,12 +1147,12 @@ function form_view_entities($entities, $form, $viewtype) {
 			}
 
 			if ($recommendable) {
-				$number_of_recommendations = count_annotations($form_data_id, 'object', 'form_data', 'form:recommendation');
+				$number_of_recommendations = elgg_get_annotations($form_data_id, 'object', 'form_data', 'form:recommendation');
 				// count_annotations had a bug, but should be fixed now, so comment out this workaround
 
 				//$number_of_recommendations = form_count(get_annotations($form_data_id, 'object', 'form_data', 'form:recommendation', 1, 0, 500));
 				if (elgg_is_logged_in() && ($viewtype == 'display')) {
-					$number_of_my_recommendations = form_count(get_annotations($form_data_id, 'object', 'form_data', 'form:recommendation', 1,$_SESSION['user']->getGUID()));
+					$number_of_my_recommendations = form_count(elgg_get_annotations($form_data_id, 'object', 'form_data', 'form:recommendation', 1,$_SESSION['user']->getGUID()));
 					$user_guid = $_SESSION['user']->getGUID();
 					if ($number_of_my_recommendations == 0){
 						$recommendation_template = '<a href="%s">'.elgg_echo("form:recommend_this"). '</a>';
@@ -1193,7 +1193,7 @@ function form_view_entities($entities, $form, $viewtype) {
 				 
 				$vars['_full_view_link'] = '<a href="'.$entity_url.'">'.elgg_echo('form:full_view').'</a>';
 				$vars['_full_view_url'] = $entity_url;
-				$vars['_friendlytime'] = friendly_time($entity->time_created);
+				$vars['_friendlytime'] = elgg_view_friendly_time($entity->time_created);
 				$owner_entity = $entity->getOwnerEntity();
 				$owner_url = $owner_entity->getUrl();
 				$vars['_owner_url'] = $owner_url;
@@ -1227,9 +1227,9 @@ function form_view_entities($entities, $form, $viewtype) {
 					$content = elgg_view('form/default_form_data_listing',array('entity'=>$entity,'annotations'=>$annotation_bit));
 				}
 			} else {
-				$content = sprintf(elgg_echo('form:submitted'),friendly_time($entity->time_created));
+				$content = sprintf(elgg_echo('form:submitted'),elgg_view_friendly_time($entity->time_created));
 				if ($entity->time_updated != $entity->time_created) {
-					$content .= ", ".sprintf(elgg_echo('form:updated'),friendly_time($entity->time_updated));
+					$content .= ", ".sprintf(elgg_echo('form:updated'),elgg_view_friendly_time($entity->time_updated));
 				}
 			}
 
@@ -1242,7 +1242,7 @@ function form_view_entities($entities, $form, $viewtype) {
 function form_recommend($form_data_id) {
     if (elgg_is_logged_in()) {
         $user_guid = $_SESSION['user']->getGUID();
-        $number_of_my_recommendations = form_count(get_annotations($form_data_id, 'object', 'form_data', 'form:recommendation', 1,$user_guid));
+        $number_of_my_recommendations = form_count(elgg_get_annotations($form_data_id, 'object', 'form_data', 'form:recommendation', 1,$user_guid));
         if ($number_of_my_recommendations == 0) {
             create_annotation($form_data_id, 'form:recommendation', 1, 'integer', $user_guid, ACCESS_PUBLIC);
             return true;
@@ -1368,7 +1368,7 @@ function form_set_data_from_form($form_data_id = 0) {
                         }
                     }
                     
-                    if (is_plugin_enabled('attach')) {
+                    if (is_elgg_is_active_plugin('attach')) {
 	                    foreach($attachments as $attachment) {
 	                        $formfieldname = 'form_data_'.$attachment;
 	                        if (attach_handle_single_file($fd,$formfieldname)) {
@@ -1384,7 +1384,7 @@ function form_set_data_from_form($form_data_id = 0) {
                     if (!$form_data_id) {
                     	// set the relationship (the new way of doing things)
                     	add_entity_relationship($fd->guid, 'form_data_for_form', $form->guid);
-                    	add_to_river('river/object/form_data/create','create',get_loggedin_userid(),$fd->getGUID());
+                    	elgg_create_river_item('river/object/form_data/create','create',elgg_get_logged_in_user_guid(),$fd->getGUID());
                     }
                     // TODO: avoid this second save
                     $fd->save();
@@ -1569,7 +1569,7 @@ function form_get_data_with_search_conditions($conditions,$sd,$limit,$offset) {
     // will return at most 500 search results
     if ($form->profile == FORM_USER_PROFILE) {
     	// this is a profile form, so get the data from users
-        $entities = get_entities_from_metadata_multi($conditions, 'user', '',0,500);
+        $entities = elgg_get_entities_from_metadata($conditions, 'user', '',0,500);
     } else if ($form->profile == FORM_GROUP_PROFILE) {
     	// this is a group profile form, so get the data from groups
     	// if a profile category is set for this form, restrict the search
@@ -1577,10 +1577,10 @@ function form_get_data_with_search_conditions($conditions,$sd,$limit,$offset) {
     	if ($form->profile_category) {
     		$conditions['group_profile_category'] = $form->profile_category;
     	}
-        $entities = get_entities_from_metadata_multi($conditions, 'group', '',0,500);
+        $entities = elgg_get_entities_from_metadata($conditions, 'group', '',0,500);
     } else if ($conditions) {
         $conditions['form_id'] = $sd->form_id;
-        $entities = get_entities_from_metadata_multi($conditions, 'object', 'form_data',0,500);
+        $entities = elgg_get_entities_from_metadata($conditions, 'object', 'form_data',0,500);
     } else {
         // if no conditions, return everything from the relevant form
         $entities = elgg_get_entities_from_metadata('form_id', $sd->form_id, 'object', 'form_data',0,500);
@@ -1656,7 +1656,7 @@ function form_get_data_with_search_conditions2($conditions,$sd,$limit,$offset) {
         $view_languages = array();
         if (elgg_is_logged_in()) {
             $key = 'form:view_content_languages';
-            $user = get_loggedin_user();
+            $user = elgg_get_logged_in_user_entity();
             if (!empty($user->$key)) {
                 $view_languages = explode(',',$user->$key);
             }
@@ -1694,16 +1694,16 @@ function form_get_data_with_search_conditions_simple($conditions,$type,$form_id,
     
     if ($type == 'user') {
     	// this is a user profile form, so get the data from users
-        $entities = get_entities_from_metadata_multi($conditions, 'user','',0,$limit,$offset);
-        $count = get_entities_from_metadata_multi($conditions, 'user','',0,$limit,$offset,"",0,true);
+        $entities = elgg_get_entities_from_metadata($conditions, 'user','',0,$limit,$offset);
+        $count = elgg_get_entities_from_metadata($conditions, 'user','',0,$limit,$offset,"",0,true);
     } else if ($type == 'group') {
     	// this is a group profile form, so get the data from groups
-        $entities = get_entities_from_metadata_multi($conditions, 'group','',0,$limit,$offset);
-        $count = get_entities_from_metadata_multi($conditions, 'group','',0,$limit,$offset,"",0,true);
+        $entities = elgg_get_entities_from_metadata($conditions, 'group','',0,$limit,$offset);
+        $count = elgg_get_entities_from_metadata($conditions, 'group','',0,$limit,$offset,"",0,true);
     } else if ($type == 'file') {
     	// this is a file form, so get the data from files
-        $entities = get_entities_from_metadata_multi($conditions, 'object','file',0,$limit,$offset);
-        $count = get_entities_from_metadata_multi($conditions, 'object','file',0,$limit,$offset,"",0,true);
+        $entities = elgg_get_entities_from_metadata($conditions, 'object','file',0,$limit,$offset);
+        $count = elgg_get_entities_from_metadata($conditions, 'object','file',0,$limit,$offset,"",0,true);
         
     } else {
     	if (!$conditions) {
@@ -1711,8 +1711,8 @@ function form_get_data_with_search_conditions_simple($conditions,$type,$form_id,
     	}
         $conditions['form_id'] = $form_id;
         $conditions['_language'] = $CONFIG->language;
-        $entities = get_entities_from_metadata_multi($conditions, 'object','form_data',0,$limit,$offset);
-        $count = get_entities_from_metadata_multi($conditions, 'object','form_data',0,$limit,$offset,"",0,true);
+        $entities = elgg_get_entities_from_metadata($conditions, 'object','form_data',0,$limit,$offset);
+        $count = elgg_get_entities_from_metadata($conditions, 'object','form_data',0,$limit,$offset,"",0,true);
     }
     return array($count,$entities);
 }
@@ -1821,7 +1821,7 @@ function form_get_tabbed_output_display($form,$data) {
     if ($maps) {
         foreach($maps as $map) {
             $field = get_entity($map->field_id);
-            if (($field->field_type != 'access') && (!$field->invisible || isadminloggedin())) {
+            if (($field->field_type != 'access') && (!$field->invisible || elgg_is_admin_logged_in())) {
 	            $internalname = $field->internal_name;
 	            if (isset($data[$internalname]) && $data[$internalname]->value) {
 		            if (!$field->tab) {
@@ -1864,7 +1864,7 @@ function form_render_form_template($form,$field_list) {
 		$tvars[$fi] = $html['field'];
 	}
 	if ($form->profile == FORM_REGISTRATION) {
-		if(is_plugin_enabled('flexreg')) {
+		if(elgg_is_active_plugin('flexreg')) {
 			$standard_fields = flexreg_get_standard_fields(false);
 			$tvars = array_merge($tvars,$standard_fields);
 		}
