@@ -11,12 +11,12 @@
  */
     
 // Define context
-set_context('form');
+elgg_set_context('form');
 
-set_page_owner(get_loggedin_userid());
+elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
 
 $title = elgg_echo('form:list_forms_title');
 $body = elgg_view('form/forms/list_forms');
     
-page_draw($title,elgg_view_layout("two_column_left_sidebar", '', elgg_view_title($title) . $body));
+elgg_view_page($title,elgg_view_layout("two_column_left_sidebar", '', elgg_view_title($title) . $body));
 ?>
