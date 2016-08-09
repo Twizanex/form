@@ -17,13 +17,13 @@ require_once(dirname(__FILE__).'/model.php');
 
 function form_get_latest_public_profile_form($profile_type=1,$profile_category='') {
 	$conditions = array('profile'=>$profile_type, 'profile_category'=>$profile_category);
-    $form_array = get_entities_from_metadata_multi($conditions,'object','form:form');
+    $form_array = elgg_get_entities_from_metadata($conditions,'object','form:form');
     if (!$form_array) {
     	if ($profile_category) {
     		// try again, this time with an empty (default) profile category
     		$profile_category = '';
     		$conditions = array('profile'=>$profile_type, 'profile_category'=>'');
-    		$form_array = get_entities_from_metadata_multi($conditions,'object','form:form');
+    		$form_array = elgg_get_entities_from_metadata($conditions,'object','form:form');
     	}
     }
     
@@ -65,7 +65,7 @@ function form_set_group_profile_categories($group_profile_categories) {
 }
 
 function form_get_data_from_profile($form_id,$entity) {
-    $metadata = get_metadata_for_entity($entity->getGUID());
+    $metadata = elgg_get_metadata($entity->getGUID());
     
     // beginning of workaround
     // sadly Elgg 1.1 fails to enforce access controls for get_metadata_for_entity
@@ -75,7 +75,7 @@ function form_get_data_from_profile($form_id,$entity) {
     if ($metadata) {
     	foreach($metadata as $m) {
     		// get_metadata does enforce the access controls, so use that
-    		$good_m = get_metadata($m->id);
+    		$good_m = elgg_get_metadata_from_id($m->id);
     		if ($good_m) {
     			$good_metadata[] = $good_m;
     		}
@@ -274,7 +274,7 @@ function form_set_data($entity,$data) {
     foreach($data as $name => $item) {
          // look for magic names first
 
-    	remove_metadata($entity_guid, $name);
+    	elgg_delete_metadata($entity_guid, $name);
     	$value = $item->value;
     	if (is_array($value)) {
     		// currently tags and checkbox groups are the only field types returning multiple values
