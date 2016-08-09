@@ -20,7 +20,7 @@ $redirect_url = '';
 admin_gatekeeper();
 
 // Define context
-set_context('form');
+elgg_set_context('form');
         
 $form_action = get_input('form_action','');
 $type = get_input('type','');
@@ -182,6 +182,6 @@ if ($form_action == 'move') {
 } else if ($redirect_url) {
     forward($redirect_url);
 } else {
-    page_draw($title,elgg_view_layout("two_column_left_sidebar", '', elgg_view_title($title) . $body));
+    elgg_view_page($title,elgg_view_layout("two_column_left_sidebar", '', elgg_view_title($title) . $body));
 }
 ?>
