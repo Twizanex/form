@@ -20,7 +20,7 @@
 
 	global $CONFIG;
 
-    $value = trim(autop(parse_urls(filter_tags($vars['value']))));
+    $value = trim(elgg_autop(parse_urls(filter_tags($vars['value']))));
     
     // strip off last </p> if any
     if (substr($value,strlen($value)-4,4) == '</p>') {
