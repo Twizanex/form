@@ -37,7 +37,7 @@ $entities = $result[1];
 if ($entities) {
 	if (($form->profile == FORM_USER_PROFILE) || ($form->profile == FORM_GROUP_PROFILE)) {
 		echo elgg_view_entity_list($entities, $count, $offset, $limit, false, false);
-		if (isadminloggedin() && ($form->profile == FORM_USER_PROFILE) && is_plugin_enabled('message_queue') && (elgg_get_plugin_setting('admin_search_mail', 'form') == 'yes')) {
+		if (elgg_is_admin_logged_in() && ($form->profile == FORM_USER_PROFILE) && elgg_is_active_plugin('message_queue') && (elgg_get_plugin_setting('admin_search_mail', 'form') == 'yes')) {
 			echo elgg_view('form/forms/send_user_message',array('fd'=>$fd,'sd'=>$sd));
 		}
 	} else {
