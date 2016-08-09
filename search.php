@@ -19,13 +19,13 @@ $search_definition_id = get_input('sid',0);
 $sd = get_entity($search_definition_id);
 
 // Define context
-set_context('form:content');
+elgg_set_context('form:content');
 
 if($sd) {
 	$form = get_entity($sd->form_id);
 	if ($form && $form->profile == 2) {
 		// this is searching group profiles
-		set_context('groups');
+		elgg_set_context('groups');
 	}
 }
 $hidden = get_input('form_data','');
@@ -34,6 +34,6 @@ $body = elgg_view('form/forms/search',array('search_definition'=>$sd,'hidden'=>$
 
 $title = $sd->title;
 
-page_draw($title,elgg_view_layout("two_column_left_sidebar", '', elgg_view_title($title) . $body));
+elgg_view_page($title,elgg_view_layout("two_column_left_sidebar", '', elgg_view_title($title) . $body));
 
 ?>
