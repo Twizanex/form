@@ -17,7 +17,7 @@ require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 require_once(dirname(__FILE__)."/models/model.php");
     
 // Define context
-set_context('form:admin');
+elgg_set_context('form:admin');
 
 admin_gatekeeper();
 
@@ -39,7 +39,7 @@ if ($user) {
     
     $body = elgg_view('form/forms/list_fields', array('user'=>$user, 'fields'=>$fields, 'page_return_type'=>$type));
         
-    page_draw($title,elgg_view_layout("two_column_left_sidebar", '', elgg_view_title($title) . $body));
+    elgg_view_page($title,elgg_view_layout("two_column_left_sidebar", '', elgg_view_title($title) . $body));
 } else {
     register_error(elgg_echo('form:error_no_such_user'));
     forward();
