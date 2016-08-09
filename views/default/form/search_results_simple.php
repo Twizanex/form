@@ -29,12 +29,12 @@ if ($type == 'user') {
  	// load flexgroupprofile model
  	require_once(dirname(dirname(dirname(dirname(dirname(__FILE__))))) . "/flexgroupprofile/models/model.php");
  	$form = flexgroupprofile_get_profile_form();
- 	set_context('groups');
+ 	elgg_set_context('groups');
 } else if ($type == 'file') {
  	// load flexgroupprofile model
  	require_once(dirname(dirname(dirname(dirname(dirname(__FILE__))))) . "/flexfile/models/model.php");
  	$form = flexfile_get_file_form();
- 	set_context('file');
+ 	elgg_set_context('file');
 } else {
 	$form_id = (int) get_input('form_id',0);
 	$form = get_entity($form_id);
@@ -48,13 +48,13 @@ $count = $result[0];
 $entities = $result[1];
 
 if ($entities) {
-	set_context('search');
+	elgg_set_context('search');
 	if (in_array((int) $form->profile, array(1,2,3))) {
 		echo elgg_view_entity_list($entities, $count, $offset, $limit, false, false);
 	} else {
 		echo form_view_entity_list($entities, $form, $count, $offset, $limit, false, false);
 	}
-	set_context('form');
+	elgg_set_context('form');
 } else {
     echo '<p>'.elgg_echo('form:no_search_results').'</p>';
 }
