@@ -28,7 +28,7 @@ if ($form_action == 'add' || $form_action == 'change' ) {
     // add a form with an empty or existing form name
     $form = form_set_form_definition();
     
-    set_context('form:admin');
+    elgg_set_context('form:admin');
     $form_id = $form->getGUID();
     $fields = form_get_fields($form_id);
     $title = sprintf(elgg_echo('form:manage_form_title'),$form->title,$form->name);
@@ -80,6 +80,6 @@ if ($form_action == 'add' || $form_action == 'change' ) {
 if ($redirect_url) {
     forward($redirect_url);
 } else { 
-    page_draw($title,elgg_view_layout("two_column_left_sidebar", '', elgg_view_title($title) . $body));
+    elgg_view_page($title,elgg_view_layout("two_column_left_sidebar", '', elgg_view_title($title) . $body));
 }
 ?>
