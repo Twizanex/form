@@ -34,7 +34,7 @@
 			
 		// Register entity type
 			if (elgg_get_plugin_setting('register_user_content', 'form') == 'yes') {
-				register_entity_type('object','form_data');
+				elgg_register_entity_type('object','form_data');
 			}
 			
 		// Register a page handler, so we can have nice URLs
@@ -68,7 +68,7 @@
 			form_set_menu_items();    		
     		if (form_get_user_content_status()) {
 			
-			    add_menu(elgg_echo('item:object:form_data'), $CONFIG->wwwroot . "pg/form/" . $_SESSION['user']->username);
+			    elgg_register_menu_item(elgg_echo('item:object:form_data'), $CONFIG->wwwroot . "pg/form/" . $_SESSION['user']->username);
 			    // add a view content option to user settings
 		        extend_elgg_settings_page('form/settings/usersettings', 'usersettings/user');
 		    }
@@ -84,7 +84,7 @@
 			}
 			if ($form_id) {
 				$form = get_entity($form_id);
-				set_page_owner($form->getOwner());
+				elgg_set_page_owner_guid($form->getOwner());
 			}
 		}
 		
@@ -100,13 +100,13 @@
 			elgg_register_menu_item(elgg_echo('form:manage_forms_title'),$admin_url);
 		}
 		
-		if ($context == 'form:admin' && isadminloggedin()) {
+		if ($context == 'form:admin' && elgg_is_admin_logged_in()) {
 	       // elgg_register_menu_item(elgg_echo('form:add_new_profile_form_link'),$CONFIG->wwwroot.'mod/form/manage_form.php?username='.$username.'&profile=1', '4formactions');
 	       // elgg_register_menu_item(elgg_echo('form:add_new_group_profile_form_link'),$CONFIG->wwwroot.'mod/form/manage_form.php?username='.$username.'&profile=2', '4formactions');
 	        elgg_register_menu_item(elgg_echo('form:manage_group_profile_categories_title'),$CONFIG->wwwroot.'mod/form/manage_group_profile_categories.php?username='.$username, '4formactions');
 		}
 		
-		if (in_array($context,array('form','form:content','form:admin')) && isadminloggedin()) {
+		if (in_array($context,array('form','form:content','form:admin')) && elgg_is_admin_logged_in()) {
 			// currently only admins get to manage forms
 			if ($form_id) {
 				elgg_register_menu_item(elgg_echo('form:edit_page_link'),$CONFIG->wwwroot.'mod/form/manage_form.php?id='.$form_id,'1formactions');
@@ -132,7 +132,7 @@
 		
 		if ($context == 'form:content' && $form_id) {
 			if (elgg_is_logged_in()) {
-				set_page_owner($_SESSION['user']->getGUID());
+				elgg_set_page_owner_guid($_SESSION['user']->getGUID());
 			}
 			if (!$form->profile) {
 				if ($sid = get_input('sid',0)) {
