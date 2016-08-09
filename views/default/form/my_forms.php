@@ -21,7 +21,7 @@ $username = $vars['username'];
 if ($username) {
 	$user = get_user_by_username($username);
 } else {
-	$user = get_loggedin_user();
+	$user = elgg_get_logged_in_user_entity();
 }
 
 $form_id = $form->getGUID();
@@ -34,12 +34,12 @@ $entities = array();
 if ($form_view == 'recommendations') {
     // get all the form data with recommendations, sorted with the most recommended at the top
     // TODO: replace with more efficient SQL
-    $all_entities = get_entities_from_annotations("object", "form_data", "form:recommendation", "", 0, 0, 5000);
+    $all_entities = elgg_get_entities_from_annotations("object", "form_data", "form:recommendation", "", 0, 0, 5000);
     if ($all_entities) {
         $entity_list = array();
         foreach($all_entities as $entity) {
             if ($entity->form_id == $form_id) {
-                $count = count_annotations($entity->getGUID(), "object", "form_data", "form:recommendation");
+                $count = elgg_get_annotations($entity->getGUID(), "object", "form_data", "form:recommendation");
                 $item = new StdClass();
                 $item->entity = $entity;
                 $item->count = $count;
